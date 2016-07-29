@@ -1,0 +1,42 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    aws-sdk (2.4.4)
+      aws-sdk-resources (= 2.4.4)
+    aws-sdk-core (2.4.4)
+      jmespath (~> 1.0)
+    aws-sdk-resources (2.4.4)
+      aws-sdk-core (= 2.4.4)
+    cucloud (0.4.0)
+      aws-sdk (~> 2)
+      uuid (~> 2.3)
+    diff-lcs (1.2.5)
+    jmespath (1.3.1)
+    macaddr (1.7.1)
+      systemu (~> 2.6.2)
+    rspec (3.5.0)
+      rspec-core (~> 3.5.0)
+      rspec-expectations (~> 3.5.0)
+      rspec-mocks (~> 3.5.0)
+    rspec-core (3.5.2)
+      rspec-support (~> 3.5.0)
+    rspec-expectations (3.5.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.5.0)
+    rspec-mocks (3.5.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.5.0)
+    rspec-support (3.5.0)
+    systemu (2.6.5)
+    uuid (2.3.8)
+      macaddr (~> 1.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  cucloud
+  rspec
+
+BUNDLED WITH
+   1.12.5
