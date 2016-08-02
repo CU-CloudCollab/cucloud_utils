@@ -8,7 +8,6 @@ MAX_KEY_AGE = 90
 HOURS_SINCE_LAST_RULE_EVALUATION = 24
 
 describe 'Account configuration check' do
-
   describe 'Check IAM Policies' do
     let(:iam_utils) do
       Cucloud::IamUtils.new
@@ -36,7 +35,7 @@ describe 'Account configuration check' do
     end
 
     it 'should not have IAM users with passwords defined' do
-      expect(iam_utils.get_users.find {|x| x[:has_password]}).to be_nil
+      expect(iam_utils.get_users.find { |x| x[:has_password] }).to be_nil
     end
 
     it "should not have any accesses keys greater than #{MAX_KEY_AGE} days old" do
@@ -47,73 +46,78 @@ describe 'Account configuration check' do
       let(:checks) do
         iam_utils.audit_password_policy(
           [
-            { key: "minimum_password_length", operator: "GTE", value: PASSWORD_MINIMUM_LENGTH },
-            { key: "max_password_age", operator: "LTE", value: PASSWORD_MAXIMUM_AGE_DAYS },
-            { key: "password_reuse_prevention", operator: "LTE", value: PASSWORD_REUSE },
-            { key: "require_symbols", operator: "EQ", value: true },
-            { key: "require_numbers", operator: "EQ", value: true },
-            { key: "require_uppercase_characters", operator: "EQ", value: true },
-            { key: "require_lowercase_characters", operator: "EQ", value: true },
-            { key: "allow_users_to_change_password", operator: "EQ", value: true },
-            { key: "hard_expiry", operator: "EQ", value: false },
+            { key: 'minimum_password_length', operator: 'GTE', value: PASSWORD_MINIMUM_LENGTH },
+            { key: 'max_password_age', operator: 'LTE', value: PASSWORD_MAXIMUM_AGE_DAYS },
+            { key: 'password_reuse_prevention', operator: 'LTE', value: PASSWORD_REUSE },
+            { key: 'require_symbols', operator: 'EQ', value: true },
+            { key: 'require_numbers', operator: 'EQ', value: true },
+            { key: 'require_uppercase_characters', operator: 'EQ', value: true },
+            { key: 'require_lowercase_characters', operator: 'EQ', value: true },
+            { key: 'allow_users_to_change_password', operator: 'EQ', value: true },
+            { key: 'hard_expiry', operator: 'EQ', value: false }
           ]
         )
       end
 
       it "should minimum password length of #{PASSWORD_MINIMUM_LENGTH}" do
-        expect(checks.find {|x| x[:key] == 'minimum_password_length'}[:passes]).to be true
+        expect(checks.find { |x| x[:key] == 'minimum_password_length' }[:passes]).to be true
       end
 
       it "should have a maximum password age of #{PASSWORD_MAXIMUM_AGE_DAYS}" do
-        expect(checks.find {|x| x[:key] == 'max_password_age'}[:passes]).to be true
+        expect(checks.find { |x| x[:key] == 'max_password_age' }[:passes]).to be true
       end
 
       it "should prevent password reuse of last #{PASSWORD_REUSE} passwords" do
-        expect(checks.find {|x| x[:key] == 'password_reuse_prevention'}[:passes]).to be true
+        expect(checks.find { |x| x[:key] == 'password_reuse_prevention' }[:passes]).to be true
       end
 
       it 'should require symbols in the password' do
-        expect(checks.find {|x| x[:key] == 'require_symbols'}[:passes]).to be true
+        expect(checks.find { |x| x[:key] == 'require_symbols' }[:passes]).to be true
       end
 
       it 'should require numbers in the password' do
-        expect(checks.find {|x| x[:key] == 'require_numbers'}[:passes]).to be true
+        expect(checks.find { |x| x[:key] == 'require_numbers' }[:passes]).to be true
       end
 
       it 'should require uppercase characters in the password' do
-        expect(checks.find {|x| x[:key] == 'require_uppercase_characters'}[:passes]).to be true
+        expect(checks.find { |x| x[:key] == 'require_uppercase_characters' }[:passes]).to be true
       end
 
       it 'should require lowercase characters in the password' do
-        expect(checks.find {|x| x[:key] == 'require_lowercase_characters'}[:passes]).to be true
+        expect(checks.find { |x| x[:key] == 'require_lowercase_characters' }[:passes]).to be true
       end
 
       it 'should allow users to change their own password' do
-        expect(checks.find {|x| x[:key] == 'allow_users_to_change_password'}[:passes]).to be true
+        expect(checks.find { |x| x[:key] == 'allow_users_to_change_password' }[:passes]).to be true
       end
 
       it 'should allow users set new password after expiration ' do
-        expect(checks.find {|x| x[:key] == 'hard_expiry'}[:passes]).to be true
+        expect(checks.find { |x| x[:key] == 'hard_expiry' }[:passes]).to be true
       end
-
     end
-
   end
 
   describe 'Check AWS Config' do
-
     Cucloud::ConfigServiceUtils.get_available_regions.each do |region|
       describe "checking #{region}" do
         let(:cs_client) do
           Aws::ConfigService::Client.new(region: region)
         end
 
+        let(:ct_client) do
+          Aws::CloudTrail::Client.new(region: region)
+        end
+
         let(:cs_util) do
           Cucloud::ConfigServiceUtils.new cs_client
         end
 
+        let(:ct_util) do
+          Cucloud::CloudTrailUtils.new(ct_client, cs_util)
+        end
+
         let(:rule) do
-          cs_util.get_config_rule_by_name("cloudtrail-enabled")
+          ct_util.get_config_rules.first
         end
 
         if region == 'us-east-1'
@@ -133,7 +137,7 @@ describe 'Account configuration check' do
         end
 
         it 'should have an active recorder' do
-          expect(cs_util.active?).to be true
+          expect(cs_util.recorder_active?).to be true
         end
       end
     end
@@ -150,11 +154,10 @@ describe 'Account configuration check' do
         ct_utils = Cucloud::CloudTrailUtils.new ct_client
         trails = ct_utils.get_cloud_trails
 
-        itso_trails << trails.find {|x| ct_utils.cornell_itso_trail?(x) && ct_utils.trail_logging_active?(x)}
-        global_trails << trails.find {|x| ct_utils.global_trail?(x) && ct_utils.trail_logging_active?(x)}
+        itso_trails << trails.find { |x| ct_utils.cornell_itso_trail?(x) && ct_utils.trail_logging_active?(x) }
+        global_trails << trails.find { |x| ct_utils.global_trail?(x) && ct_utils.trail_logging_active?(x) }
       end
     end
-
 
     it 'should have a global trail' do
       expect(global_trails.any?).to be true
@@ -166,7 +169,6 @@ describe 'Account configuration check' do
   end
 
   describe 'Check VPC configuration' do
-
     describe 'comapre nacls' do
       ec2 = Aws::EC2::Client.new
       resp = ec2.describe_regions({})
@@ -185,30 +187,30 @@ describe 'Account configuration check' do
               [
                 { cidr: '0.0.0.0/0', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 80, to: 80 },
                 { cidr: '0.0.0.0/0', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 443, to: 443 },
-                { cidr: '0.0.0.0/0', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 1024, to: 65535 },
-                { cidr: '10.0.0.0/8', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL},
-                { cidr: '128.84.0.0/16', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL},
-                { cidr: '128.253.0.0/16', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL},
-                { cidr: '132.236.0.0/16', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL},
-                { cidr: '192.35.82.0/24', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL},
-                { cidr: '192.122.235.0/24', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL},
-                { cidr: '192.122.236.0/24', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL},
+                { cidr: '0.0.0.0/0', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 1024, to: 65_535 },
+                { cidr: '10.0.0.0/8', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
+                { cidr: '128.84.0.0/16', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
+                { cidr: '128.253.0.0/16', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
+                { cidr: '132.236.0.0/16', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
+                { cidr: '192.35.82.0/24', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
+                { cidr: '192.122.235.0/24', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
+                { cidr: '192.122.236.0/24', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
                 { cidr: '0.0.0.0/0', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 80, to: 80 },
                 { cidr: '0.0.0.0/0', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 443, to: 443 },
-                { cidr: '0.0.0.0/0', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 1024, to: 65535 },
-                { cidr: '10.0.0.0/8', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL},
-                { cidr: '128.84.0.0/16', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL},
-                { cidr: '128.253.0.0/16', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL},
-                { cidr: '132.236.0.0/16', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL},
-                { cidr: '192.35.82.0/24', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL},
-                { cidr: '192.122.235.0/24', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL},
-                { cidr: '192.122.236.0/24', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL}
+                { cidr: '0.0.0.0/0', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 1024, to: 65_535 },
+                { cidr: '10.0.0.0/8', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
+                { cidr: '128.84.0.0/16', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
+                { cidr: '128.253.0.0/16', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
+                { cidr: '132.236.0.0/16', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
+                { cidr: '192.35.82.0/24', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
+                { cidr: '192.122.235.0/24', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
+                { cidr: '192.122.236.0/24', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL }
               ]
             )
           end
 
           it 'should not have any missing rules' do
-            expect(comparison.find {|x| !x[:missing].empty?}).to be nil
+            expect(comparison.find { |x| !x[:missing].empty? }).to be nil
           end
         end
       end
@@ -220,7 +222,7 @@ describe 'Account configuration check' do
       end
 
       it 'should return true' do
-          expect(vpc_utils.flow_logs?).to be true
+        expect(vpc_utils.flow_logs?).to be true
       end
     end
   end
