@@ -1,2 +1,3 @@
 FROM ruby:2.1-onbuild
-CMD ["bin/entrypoint.sh"]
+ENTRYPOINT ["bin/entrypoint.sh"]
+CMD ["--help"]
