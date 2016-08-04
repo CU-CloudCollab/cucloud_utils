@@ -28,7 +28,7 @@ The following utilities are currently available:
 ### Check Account
 
 ```
-docker run -it --rm -v ~/.aws:/root/.aws cutils bin/check_account.sh   [@TODO: REPLACE W/ HELPER]
+docker run -it --rm -v ~/.aws:/root/.aws cutils check_account
 ```
 
 Utility to check your VPC configuration and test if it is in compliance with current ITSO and Cornell best practices.  The utility runs as a set of rspec tests and will return a proper exit code on pass/fail (ideal for a jenkins job).
