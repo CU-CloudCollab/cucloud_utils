@@ -33,7 +33,7 @@ docker run -it --rm -v ~/.aws:/root/.aws cutils check_account
 
 Utility to check your VPC configuration and test if it is in compliance with current ITSO and Cornell best practices.  The utility runs as a set of rspec tests and will return a proper exit code on pass/fail (ideal for a jenkins job).
 
-If running as a job, we reccomend using AWS credentails with minimum privileges -- the following policy example can be used:
+If running as a job, we recommend using AWS credentials with minimum privileges -- the following policy example can be used:
 
 ```
 {
@@ -94,8 +94,36 @@ If running as a job, we reccomend using AWS credentails with minimum privileges 
         }
     ]
 }
-
 ```
 
+### Auto Snapshot
 
+```
+docker run -it --rm -v ~/.aws:/root/.aws cutils auto_snapshot
+```
 
+Utility to snapshot volumes attached to running instances.  The utility takes one integer parameter, the default if nothing is passed is 5.  The utility will create an EBS snapshot of all volumes that do not have a snapshot within the last x days, where x is the parameter passed to the utility.
+
+If running as a job, we recommend using AWS credentials with minimum privileges -- the following policy example can be used:
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1472066087000",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:CreateSnapshot",
+                "ec2:DescribeSnapshots",
+                "ec2:DescribeVolumes",
+                "ec2:DescribeInstances",
+                "ec2:CreateTags"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
+```

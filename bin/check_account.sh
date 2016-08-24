@@ -1,2 +1,2 @@
-#!/bin/bash 
-rspec spec --format documentation
+#!/bin/bash
+rspec --format documentation --default-path utilities/check_account/checks
