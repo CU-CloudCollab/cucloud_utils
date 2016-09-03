@@ -9,6 +9,9 @@ case "$1" in
       exit 1
     fi
     ;;
+  auto_patch)
+    bin/auto_patch.rb "${@:2}"
+    ;;
   auto_snapshot)
     bin/auto_snapshot.rb "${@:2}"
     ;;
