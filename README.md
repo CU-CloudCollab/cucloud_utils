@@ -127,3 +127,61 @@ If running as a job, we recommend using AWS credentials with minimum privileges 
     ]
 }
 ```
+
+### Auto Patch
+
+```
+docker run -it --rm -v ~/.aws:/root/.aws cutils auto_patch
+```
+
+Utility to patch and reboot linux instances.  If no parameters are supplied it will look for instances tagged with auto_patch with a value of 1.  Optionally can supply the tag and the value of that tag.
+
+If running as a job, we recommend using AWS credentials with minimum privileges -- the following policy example can be used:
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1472066087000",
+            "Effect": "Allow",
+            "Action": [
+              "ec2:DescribeInstances",
+              "ssm:SendCommand"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
+```
+
+### Clean Snapshots
+
+```
+docker run -it --rm -v ~/.aws:/root/.aws cutils clean_snapshot
+```
+
+Utility to clean up older snapshots, by default it will remove snapshots older than 15 days.  The utility accepts one parameter that can be used to adjust how many days old the snapshot needs to be to be removed.
+
+If running as a job, we recommend using AWS credentials with minimum privileges -- the following policy example can be used:
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1472066087000",
+            "Effect": "Allow",
+            "Action": [
+              "ec2:DescribeSnapshots",
+              "ec2:DeleteSnapshot"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
+```
