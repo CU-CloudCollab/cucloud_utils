@@ -185,3 +185,10 @@ If running as a job, we recommend using AWS credentials with minimum privileges 
     ]
 }
 ```
+
+### EC2 Scheduling Start/Stop
+
+```
+ docker run -it --rm -v ~/.aws:/root/.aws cutils ec2_scheduling --t environment --v development --a stop
+```
+Utility to start/stop instances based on tag name and value.  Used in conjunction with Jenkins, a good place to start to schedule start/stop of instances during business hours

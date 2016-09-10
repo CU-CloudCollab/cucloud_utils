@@ -18,10 +18,14 @@ case "$1" in
   clean_snapshot)
     bin/delete-ebs-snapshots-older-than.rb "${@:2}"
     ;;
+  ec2_scheduling)
+    bin/ec2_scheduling.rb "${@:2}"
+    ;;
   *)
     echo $"Usage: $0 {check_account, auto_snapshot}"
     echo "check_account - Utility to check your VPC configuration and test if it is in compliance with current ITSO and Cornell best practices."
     echo "auto_snapshot - Utility to backup any volumes that do not have a recent snapshot.  Accepts one integer parameter that represent how recent the snapshot must be in days.  The default is 5."
     echo "clean_snapshot - Utility to remove older snapshots.  Accepts one integer parameter that represent how old in days a snapshot can be.  The default is 15."
+    echo "ec2_scheduling - Utility to start/stop instances based on tag/value, specifically from Jenkins"
     exit 1
 esac
