@@ -186,7 +186,7 @@ If running as a job, we recommend using AWS credentials with minimum privileges 
 }
 ```
 
-### EC2 Scheduling Account
+### EC2 Scheduling Start/Stop
 
 ```
  docker run -it --rm -v ~/.aws:/root/.aws cutils ec2_scheduling --t environment --v development --a stop
