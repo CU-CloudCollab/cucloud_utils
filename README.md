@@ -192,3 +192,30 @@ If running as a job, we recommend using AWS credentials with minimum privileges 
  docker run -it --rm -v ~/.aws:/root/.aws cutils ec2_scheduling --t environment --v development --a stop
 ```
 Utility to start/stop instances based on tag name and value.  Used in conjunction with Jenkins, a good place to start to schedule start/stop of instances during business hours
+
+
+### List Active API keys
+```
+ docker run -it --rm -v ~/.aws:/root/.aws cutils active_api_keys
+```
+Report of all active API keys on your account + their age in days.  Useful for quick inventory of keys and planning rotation schedule.
+
+Minimum IAM policy requirements:
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1476987642000",
+            "Effect": "Allow",
+            "Action": [
+                "iam:ListAccessKeys",
+                "iam:ListUsers"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
+```
