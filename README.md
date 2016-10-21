@@ -25,6 +25,13 @@ docker run -it -e AWS_ACCESS_KEY_ID=[ID] -e AWS_SECRET_ACCESS_KEY=[KEY] cutils
 
 The following utilities are currently available:
 
+* [VPC Configuration Check](#check-account)
+* [EC2 Auto-Snapshot](#auto-snapshot)
+* [EC2 Cleanup Snapshots](#clean-snapshots)
+* [EC2 Auto-Patch](#auto-patch)
+* [EC2 Start/Stop by Tag](#ec2-scheduling-start-and-stop)
+* [List Active API Keys](#list-active-api-keys)
+
 ### Check Account
 
 ```
@@ -186,7 +193,7 @@ If running as a job, we recommend using AWS credentials with minimum privileges 
 }
 ```
 
-### EC2 Scheduling Start/Stop
+### EC2 Scheduling Start and Stop
 
 ```
  docker run -it --rm -v ~/.aws:/root/.aws cutils ec2_scheduling --t environment --v development --a stop
