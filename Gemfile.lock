@@ -1,13 +1,15 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    aws-sdk (2.6.11)
-      aws-sdk-resources (= 2.6.11)
-    aws-sdk-core (2.6.11)
+    aws-sdk (2.6.35)
+      aws-sdk-resources (= 2.6.35)
+    aws-sdk-core (2.6.35)
+      aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.6.11)
-      aws-sdk-core (= 2.6.11)
-    cucloud (0.7.0)
+    aws-sdk-resources (2.6.35)
+      aws-sdk-core (= 2.6.35)
+    aws-sigv4 (1.0.0)
+    cucloud (0.7.1)
       aws-sdk (~> 2)
       uuid (~> 2.3)
     diff-lcs (1.2.5)
