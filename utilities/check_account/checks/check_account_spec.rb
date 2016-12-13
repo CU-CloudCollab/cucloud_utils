@@ -169,7 +169,7 @@ describe 'Account configuration check' do
   end
 
   describe 'Check VPC configuration' do
-    describe 'comapre nacls' do
+    describe 'Verify that NACL rules are in place' do
       ec2 = Aws::EC2::Client.new
       resp = ec2.describe_regions({})
       resp.regions.each do |region|
@@ -209,20 +209,30 @@ describe 'Account configuration check' do
             )
           end
 
-          it 'should not have any missing rules' do
+          it 'no vpcs should have any missing rules' do
             expect(comparison.find { |x| !x[:missing].empty? }).to be nil
           end
         end
       end
     end
 
-    describe 'flow_logs?' do
-      let(:vpc_utils) do
-        Cucloud::VpcUtils.new
-      end
+    describe 'Verify that flow logs are enabled' do
+      ec2 = Aws::EC2::Client.new
+      resp = ec2.describe_regions({})
+      resp.regions.each do |region|
+        describe "checking #{region.region_name}" do
+          let(:vpc_client) do
+            Aws::EC2::Client.new(region: region.region_name)
+          end
 
-      it 'should return true' do
-        expect(vpc_utils.flow_logs?).to be true
+          let(:vpc_utils) do
+            Cucloud::VpcUtils.new vpc_client
+          end
+
+          it 'all vpcs should have flow logs enabled' do
+            expect(vpc_utils.flow_logs?).to be true
+          end
+        end
       end
     end
   end
