@@ -93,7 +93,8 @@ If running as a job, we recommend using AWS credentials with minimum privileges 
             "Action": [
                 "ec2:DescribeFlowLogs",
                 "ec2:DescribeNetworkAcls",
-                "ec2:DescribeRegions"
+                "ec2:DescribeRegions",
+                "ec2:DescribeVpcs"
             ],
             "Resource": [
                 "*"
