@@ -31,6 +31,7 @@ The following utilities are currently available:
 * [EC2 Auto-Patch](#auto-patch)
 * [EC2 Start/Stop by Tag](#ec2-scheduling-start-and-stop)
 * [List Active API Keys](#list-active-api-keys)
+* [Lambda Function Backup](#lambda-function-backup)
 
 ### Check Account
 
@@ -224,6 +225,41 @@ Minimum IAM policy requirements:
                 "*"
             ]
         }
+    ]
+}
+```
+
+### Lambda Function Backup
+```
+ docker run -it --rm -v ~/.aws:/root/.aws cutils backup_lambda BUCKET_NAME
+```
+Utility to backup all lambda functions in a region in an account.  The utility accepts two parameters the first is the name  of the s3 bucket to back up to.  The second parameter controls which versions are backed up.  By default the second parameter is 'YES' which will backup all version of the lambda function, any other value will backup on the version $LATEST.
+
+Minimum IAM policy requirements:
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1476987642000",
+            "Effect": "Allow",
+            "Action": [
+              "s3:PutObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::BUCKET_NAME/*"
+            ]
+        },
+        {
+          "Sid": "DisplayFunctionDetailsPermissions",
+          "Effect": "Allow",
+          "Action": [
+              "lambda:ListVersionsByFunction",
+              "lambda:GetFunction",
+              "lambda:ListFunctions"
+          ],
+          "Resource": "*"
+      }
     ]
 }
 ```
