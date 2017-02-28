@@ -244,8 +244,7 @@ Minimum IAM policy requirements:
             "Sid": "Stmt1476987642000",
             "Effect": "Allow",
             "Action": [
-              "s3:PutObject",
-              "s3:DeleteObject"
+              "s3:PutObject"
             ],
             "Resource": [
                 "arn:aws:s3:::BUCKET_NAME/*"
