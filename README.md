@@ -21,6 +21,8 @@ Note - this command passes in your .aws folder so that commands can use your cre
 docker run -it -e AWS_ACCESS_KEY_ID=[ID] -e AWS_SECRET_ACCESS_KEY=[KEY] cutils
 ```
 
+Also this container is available from docker hub in the repository cucloudcollab/cutils.  You can pull from it and add you own code.
+
 ## Available Utilities
 
 The following utilities are currently available:
