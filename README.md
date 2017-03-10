@@ -233,7 +233,7 @@ Minimum IAM policy requirements:
 
 ### Lambda Function Backup
 ```
- docker run -it --rm -v ~/.aws:/root/.aws cutils backup_lambda BUCKET_NAME
+docker run -it --rm -v ~/.aws:/root/.aws cutils backup_lambda BUCKET_NAME
 ```
 Utility to backup all lambda functions in a region in an account.  The utility accepts two parameters the first is the name  of the s3 bucket to back up to.  The second parameter controls which versions are backed up.  By default the second parameter is 'YES' which will backup all version of the lambda function, any other value will backup on the version $LATEST.
 
@@ -262,6 +262,46 @@ Minimum IAM policy requirements:
           ],
           "Resource": "*"
       }
+    ]
+}
+```
+
+### Delete/Restore RDS Database
+```
+docker run -it --rm -v ~/.aws:/root/.aws cutils delete_db DB_IDENTIFIER
+```
+
+```
+docker run -it --rm -v ~/.aws:/root/.aws cutils restore_db --db_id DB_IDENTIFIER
+```
+
+These utilities will allow you to delete and restore RDS databases.  They are written in a way that when used together they can "hibernate" a database.  Using the delete_db function will create a final snapshot of the instance which the restore function can find.  This allows you to delete the DB at night and restore in the morning which helps to defray the cost of running many DB instances.
+
+Minimum IAM policy requirements:
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "rds:CreateDBInstance",
+                "rds:DeleteDBInstance",
+                "rds:AddTagsToResource",
+                "rds:CreateDBSnapshot"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Effect": "Deny",
+            "Action": "rds:DeleteDBInstance",
+            "Resource": [
+                "arn:aws:rds:us-east-1:ACCOUNT:db:prod-1",
+                "arn:aws:rds:us-east-1:ACCOUNT:db:prod-2",
+            ]
+        }
     ]
 }
 ```

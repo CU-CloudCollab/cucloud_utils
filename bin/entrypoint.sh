@@ -27,6 +27,12 @@ case "$1" in
   backup_lambda)
     bin/backup_lambda.rb "${@:2}"
     ;;
+  delete_db)
+    bin/delete_db.rb "${@:2}"
+    ;;
+  restore_db)
+    bin/restore_db.rb "${@:2}"
+    ;;
   *)
     echo $"Usage: $0 {check_account, auto_snapshot}"
     echo "active_api_keys - Utility to output a list of all active API keys, users, and key age."
@@ -34,6 +40,8 @@ case "$1" in
     echo "backup_lambda - Utility to backup any Lambda functions to a s3 bucket"
     echo "check_account - Utility to check your VPC configuration and test if it is in compliance with current ITSO and Cornell best practices."
     echo "clean_snapshot - Utility to remove older snapshots.  Accepts one integer parameter that represent how old in days a snapshot can be.  The default is 15."
+    echo "delete_db - Utility to delete a RDS database while taking a final shanshot name with a data time stamp"
     echo "ec2_scheduling - Utility to start/stop instances based on tag/value, specifically from Jenkins"
+    echo "restore_db - Restore a RDS snapshot based on input parameters, run with -h flag to see options"
     exit 1
 esac
