@@ -285,10 +285,13 @@ Minimum IAM policy requirements:
         {
             "Effect": "Allow",
             "Action": [
-                "rds:CreateDBInstance",
-                "rds:DeleteDBInstance",
-                "rds:AddTagsToResource",
-                "rds:CreateDBSnapshot"
+              "rds:CreateDBInstance",
+              "rds:DeleteDBInstance",
+              "rds:AddTagsToResource",
+              "rds:CreateDBSnapshot",
+              "rds:RestoreDBInstanceFromDBSnapshot",
+              "rds:ModifyDBInstance",
+              "rds:Describe*"
             ],
             "Resource": [
                 "*"
