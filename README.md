@@ -113,7 +113,21 @@ If running as a job, we recommend using AWS credentials with minimum privileges 
 docker run -it --rm -v ~/.aws:/root/.aws cutils auto_snapshot
 ```
 
-Utility to snapshot volumes attached to running instances.  The utility takes one integer parameter, the default if nothing is passed is 5.  The utility will create an EBS snapshot of all volumes that do not have a snapshot within the last x days, where x is the parameter passed to the utility.
+Utility to snapshot volumes attached to running instances.  When run with no options specified, will snapshot attached volumes that do not have a snapshot taken within the past **five** days.  Optional parameters include:
+
+   * **--apply-tag** Key=*keyname*,Value=*value*
+      * Adds a tag key/value pair to created snapshots.
+      * Note that tags specified here will **take precedence** over tags with the same key.
+         * Will override values from EBS volume tags that would otherwise have been copied via the **--preserve-tags** argument.
+      * May be specified multiple times to add several tags at once.
+   * **--num-days** *N*
+      * Take snapshots of volumes that do not have a snapshot within the last *N* days.
+      * Defaults to **5** if not specified (see backwards compatibility note below).
+   * **--preserve-tags** *a,b,c*
+      * List of tag keys to preserve, if present, from the EBS volume.
+      * May be specified multiple times to add new keys to the preservation list.
+
+Previous versions of this utility allowed specification of *one integer parameter* to indicate snapshots should be taken of EBS volumes that did not have a snapshot within the past *N* days.  That behavior has been maintained and can be used in lieu of the extended options listed above.  If both **--num-days** and an unnamed integer option are specified, the unnamed argument will be used.
 
 If running as a job, we recommend using AWS credentials with minimum privileges -- the following policy example can be used:
 
@@ -138,6 +152,34 @@ If running as a job, we recommend using AWS credentials with minimum privileges 
     ]
 }
 ```
+
+#### Examples
+Take snapshots of all EBS volumes without a snapshot in the past 2 days:
+```
+docker run -it --rm -v ~/.aws:/root/.aws cutils auto_snapshot 2
+```
+
+Take snapshots of all EBS volumes without a snapshot in the past 5 days:
+```
+docker run -it --rm -v ~/.aws:/root/.aws cutils auto_snapshot
+```
+
+Take snapshots of all EBS volumes without a snapshot in the past 5 days, adding tag "Foo=Bar"
+```
+docker run -it --rm -v ~/.aws:/root/.aws cutils auto_snapshot --apply-tag Key=Foo,Value=Bar
+```
+
+Take snapshots of all EBS volumes without a snapshot in the past 5 days, adding tags "Foo=Bar", "Foo2=Bar2" *and* preserving the volumes' "Application", "Cost Center" and "Environment" tags:
+```
+docker run -it --rm -v ~/.aws:/root/.aws cutils auto_snapshot \
+ --apply-tag Key=Foo,Value=Bar \
+ --apply-tag Key=Foo2,Value=Bar2 \
+ --preserve-tags Application \
+ --preserve-tags "Cost Center,Environment"
+```
+
+Note the use of argument quoting to account for whitespace in key/value data.
+
 
 ### Auto Patch
 
