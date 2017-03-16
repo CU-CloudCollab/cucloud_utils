@@ -3,11 +3,11 @@
 require 'cucloud'
 require 'optparse'
 
-default_days = 5
+DEFAULT_DAYS = '5'.freeze
 
 options = {
   add_tags: [],
-  num_days: nil,
+  num_days: DEFAULT_DAYS,
   preserve_tags: []
 }
 
@@ -23,7 +23,7 @@ OptionParser.new do |opts|
   end
   opts.on('--num-days N',
           Integer,
-          "Snapshot volumes without snapshot in past N days (default #{default_days}).") do |item|
+          "Snapshot volumes without snapshot in past N days (default #{DEFAULT_DAYS}).") do |item|
     options[:num_days] = item
   end
   opts.on('--preserve-tags x,y,z',
@@ -43,7 +43,7 @@ end.parse!
 
 # Restore prior version behavior where you could simply provide the number of days
 # as the sole/first argument.
-options[:num_days] = ARGV[0] || 5 if options[:num_days].nil?
+options[:num_days] = ARGV[0] if ARGV.length == 1
 
 ec2_utils = Cucloud::Ec2Utils.new
 snapshots_created = ec2_utils.backup_volumes_unless_recent_backup(options[:num_days].to_i,

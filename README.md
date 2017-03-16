@@ -127,7 +127,7 @@ Utility to snapshot volumes attached to running instances.  When run with no opt
       * List of tag keys to preserve, if present, from the EBS volume.
       * May be specified multiple times to add new keys to the preservation list.
 
-Previous versions of this utility allowed specification of *one integer parameter* to indicate snapshots should be taken of EBS volumes that did not have a snapshot within the past *N* days.  That behavior has been maintained and can be used in lieu of the extended options listed above.  If both **--num-days** and an unnamed integer option are specified, the value from **--num-days** will be used.
+Previous versions of this utility allowed specification of *one integer parameter* to indicate snapshots should be taken of EBS volumes that did not have a snapshot within the past *N* days.  That behavior has been maintained and can be used in lieu of the extended options listed above.  If both **--num-days** and an unnamed integer option are specified, the unnamed argument will be used.
 
 If running as a job, we recommend using AWS credentials with minimum privileges -- the following policy example can be used:
 
