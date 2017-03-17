@@ -30,7 +30,7 @@ describe 'Account configuration check' do
       expect(iam_utils.root_user_has_api_key?).to be false
     end
 
-    it 'should have the cornell shibboleth provider' do
+    it 'should have the Cornell Shibboleth provider' do
       expect(iam_utils.cornell_provider_configured?).to be true
     end
 
@@ -121,12 +121,12 @@ describe 'Account configuration check' do
         end
 
         if region == 'us-east-1'
-          describe 'Cloud trail rule' do
-            it 'should have a rule anbled for cloudrail' do
+          describe 'CloudTrail rule' do
+            it 'should have a rule enabled for CloudTrail' do
               expect(cs_util.rule_active?(rule)).to be true
             end
 
-            it "should have run the cloud trail rule in the last #{HOURS_SINCE_LAST_RULE_EVALUATION} hours" do
+            it "should have run the CloudTrail trail rule in the last #{HOURS_SINCE_LAST_RULE_EVALUATION} hours" do
               expect(cs_util.hours_since_last_run(rule)).to be <= HOURS_SINCE_LAST_RULE_EVALUATION
             end
 
@@ -209,7 +209,7 @@ describe 'Account configuration check' do
             )
           end
 
-          it 'no vpcs should have any missing rules' do
+          it 'no VPCs should have any missing rules' do
             expect(comparison.find { |x| !x[:missing].empty? }).to be nil
           end
         end
@@ -229,7 +229,7 @@ describe 'Account configuration check' do
             Cucloud::VpcUtils.new vpc_client
           end
 
-          it 'all vpcs should have flow logs enabled' do
+          it 'all VPCs should have flow logs enabled' do
             expect(vpc_utils.flow_logs?).to be true
           end
         end
