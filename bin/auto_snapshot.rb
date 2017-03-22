@@ -52,6 +52,8 @@ snapshots_created = ec2_utils.backup_volumes_unless_recent_backup(options[:num_d
 
 snapshots_created.each do |snapshot_created|
   print "#{snapshot_created[:snapshot_id]} was created for volume #{snapshot_created[:volume]}"
-  print " attached to instance #{snapshot_created[:instance_name]}" unless snapshot_created[:instance_name].empty?
+  unless snapshot_created[:instance_name].nil? || snapshot_created[:instance_name].empty?
+    print " attached to instance #{snapshot_created[:instance_name]}"
+  end
   puts
 end
