@@ -33,14 +33,18 @@ case "$1" in
   restore_db)
     bin/restore_db.rb "${@:2}"
     ;;
+  delete_older_rds_snapshots)
+    bin/delete_older_rds_snapshots.rb "${@:2}"
+    ;;
   *)
     echo $"Usage: $0 {check_account, auto_snapshot}"
     echo "active_api_keys - Utility to output a list of all active API keys, users, and key age."
     echo "auto_snapshot - Utility to backup any volumes that do not have a recent snapshot.  Accepts one integer parameter that represent how recent the snapshot must be in days.  The default is 5."
     echo "backup_lambda - Utility to backup any Lambda functions to a s3 bucket"
     echo "check_account - Utility to check your VPC configuration and test if it is in compliance with current ITSO and Cornell best practices."
-    echo "clean_snapshot - Utility to remove older snapshots.  Accepts one integer parameter that represent how old in days a snapshot can be.  The default is 15."
+    echo "clean_snapshot - Utility to remove older EBS snapshots.  Accepts one integer parameter that represent how old in days a snapshot can be.  The default is 15."
     echo "delete_db - Utility to delete a RDS database while taking a final shanshot name with a data time stamp"
+    echo "delete_older_rds_snapshots - Utility to remove older RDS snapshots.  Accepts one integer parameter that represent how old in days a snapshot can be.  The default is 15."
     echo "ec2_scheduling - Utility to start/stop instances based on tag/value, specifically from Jenkins"
     echo "restore_db - Restore a RDS snapshot based on input parameters, run with -h flag to see options"
     exit 1
