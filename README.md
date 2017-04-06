@@ -216,7 +216,7 @@ If running as a job, we recommend using AWS credentials with minimum privileges 
 docker run -it --rm -v ~/.aws:/root/.aws cutils clean_snapshot
 ```
 
-Utility to clean up older snapshots, by default it will remove snapshots older than 15 days.  The utility accepts one parameter that can be used to adjust how many days old the snapshot needs to be to be removed.
+Utility to clean up older EBS snapshots, by default it will remove snapshots older than 15 days.  The utility accepts one parameter that can be used to adjust how many days old the snapshot needs to be to be removed.
 
 If running as a job, we recommend using AWS credentials with minimum privileges -- the following policy example can be used:
 
@@ -345,6 +345,35 @@ Minimum IAM policy requirements:
             "Resource": [
                 "arn:aws:rds:us-east-1:ACCOUNT:db:prod-1",
                 "arn:aws:rds:us-east-1:ACCOUNT:db:prod-2",
+            ]
+        }
+    ]
+}
+```
+
+### Delete Older RDS Snapshots
+
+```
+docker run -it --rm -v ~/.aws:/root/.aws cutils delete_older_rds_snapshots
+```
+
+Utility to clean up older RDS snapshots, by default it will remove snapshots older than 15 days.  The utility accepts one parameter that can be used to adjust how many days old the snapshot needs to be to be removed.
+
+If running as a job, we recommend using AWS credentials with minimum privileges -- the following policy example can be used:
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1472066087000",
+            "Effect": "Allow",
+            "Action": [
+              "rds:DescribeDBSnapshots",
+              "rds:DeleteDBSnapshot"
+            ],
+            "Resource": [
+                "*"
             ]
         }
     ]
