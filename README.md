@@ -107,6 +107,13 @@ If running as a job, we recommend using AWS credentials with minimum privileges 
 }
 ```
 
+#### Check Account Exemptions
+**IAM Key Age**: Users may be exempted from the 90 day IAM key check test by including them in a comma-delimited list passed via the `CUTILS_IAM_KEY_WHITELIST`:
+```
+docker run -it --rm -e CUTILS_IAM_KEY_WHITELIST="service_acct1,service_acct2" cutils check_account
+```
+This is useful for users where long-lived IAM keys are by design or may be difficult to rotate.
+
 ### Auto Snapshot
 
 ```
