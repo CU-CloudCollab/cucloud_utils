@@ -112,7 +112,7 @@ If running as a job, we recommend using AWS credentials with minimum privileges 
 ```
 docker run -it --rm -e CUTILS_IAM_KEY_WHITELIST="service_acct1,service_acct2" cutils check_account
 ```
-This is useful for users where long-lived IAM keys are by design or may be difficult to rotate.
+Keys that are especially difficult to rotate can be whitelisted with this option. Note, allowing keys to age past 90 days is not a recommended practice. If it is absolutely necessary and instance roles are not an option (i.e., SES SMPT), we recommend that these keys be very tightly scoped in privilege.
 
 ### Auto Snapshot
 

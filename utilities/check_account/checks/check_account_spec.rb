@@ -41,7 +41,7 @@ describe 'Account configuration check' do
       expect(iam_utils.get_users.find { |x| x[:has_password] }).to be_nil
     end
 
-    it "any access keys older than #{MAX_KEY_AGE} days should be whitelisted" do
+    it "should not have any keys older than #{MAX_KEY_AGE} days unless explicitly whitelisted" do
       iam_utils.get_active_keys_older_than_n_days(MAX_KEY_AGE).each do |key|
         expect(IAM_KEY_WHITELIST).to include(key[:base_data].user_name)
       end
