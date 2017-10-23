@@ -6,6 +6,9 @@ PASSWORD_MAXIMUM_AGE_DAYS = 90
 PASSWORD_REUSE = 3
 MAX_KEY_AGE = 90
 HOURS_SINCE_LAST_RULE_EVALUATION = 24
+IAM_KEY_WHITELIST = ENV["CUTILS_IAM_KEY_WHITELIST"].nil? ? \
+  [] : \
+  ENV["CUTILS_IAM_KEY_WHITELIST"].split(',').collect{|i| i.strip}
 
 describe 'Account configuration check' do
   describe 'Check IAM Policies' do
@@ -38,8 +41,10 @@ describe 'Account configuration check' do
       expect(iam_utils.get_users.find { |x| x[:has_password] }).to be_nil
     end
 
-    it "should not have any accesses keys greater than #{MAX_KEY_AGE} days old" do
-      expect(iam_utils.get_active_keys_older_than_n_days(MAX_KEY_AGE)).to be_empty
+    it "should not have any keys older than #{MAX_KEY_AGE} days unless explicitly whitelisted" do
+      iam_utils.get_active_keys_older_than_n_days(MAX_KEY_AGE).each do |key|
+        expect(IAM_KEY_WHITELIST).to include(key[:base_data].user_name)
+      end
     end
 
     describe 'password policy' do
