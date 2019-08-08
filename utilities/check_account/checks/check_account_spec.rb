@@ -190,9 +190,12 @@ describe 'Account configuration check' do
           let(:comparison) do
             vpc_utils.compare_nacls(
               [
+                { cidr: '0.0.0.0/0', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 22, to: 22 },
                 { cidr: '0.0.0.0/0', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 80, to: 80 },
+                { cidr: '0.0.0.0/0', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::UDP, from: 123, to: 123 },
                 { cidr: '0.0.0.0/0', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 443, to: 443 },
                 { cidr: '0.0.0.0/0', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 1024, to: 65_535 },
+                { cidr: '0.0.0.0/0', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::UDP, from: 1024, to: 65_535 },
                 { cidr: '10.0.0.0/8', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
                 { cidr: '128.84.0.0/16', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
                 { cidr: '128.253.0.0/16', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
@@ -200,16 +203,27 @@ describe 'Account configuration check' do
                 { cidr: '192.35.82.0/24', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
                 { cidr: '192.122.235.0/24', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
                 { cidr: '192.122.236.0/24', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
+                { cidr: '52.200.35.38/32', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 88, to: 88 },
+                { cidr: '52.200.35.38/32', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::UDP, from: 88, to: 88 },
+                { cidr: '52.201.66.104/32', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 88, to: 88 },
+                { cidr: '52.201.66.104/32', egress: true, protocol: Cucloud::VpcUtils::PROTOCOL::UDP, from: 88, to: 88 },
+                { cidr: '0.0.0.0/0', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 22, to: 22 },
                 { cidr: '0.0.0.0/0', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 80, to: 80 },
+                { cidr: '0.0.0.0/0', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::UDP, from: 123, to: 123 },
                 { cidr: '0.0.0.0/0', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 443, to: 443 },
                 { cidr: '0.0.0.0/0', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 1024, to: 65_535 },
+                { cidr: '0.0.0.0/0', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::UDP, from: 1024, to: 65_535 },
                 { cidr: '10.0.0.0/8', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
                 { cidr: '128.84.0.0/16', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
                 { cidr: '128.253.0.0/16', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
                 { cidr: '132.236.0.0/16', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
                 { cidr: '192.35.82.0/24', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
                 { cidr: '192.122.235.0/24', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
-                { cidr: '192.122.236.0/24', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL }
+                { cidr: '192.122.236.0/24', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::ALL },
+                { cidr: '52.200.35.38/32', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 88, to: 88 },
+                { cidr: '52.200.35.38/32', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::UDP, from: 88, to: 88 },
+                { cidr: '52.201.66.104/32', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::TCP, from: 88, to: 88 },
+                { cidr: '52.201.66.104/32', egress: false, protocol: Cucloud::VpcUtils::PROTOCOL::UDP, from: 88, to: 88 }
               ]
             )
           end
